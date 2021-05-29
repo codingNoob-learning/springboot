@@ -13,16 +13,14 @@ import java.time.LocalDateTime;
 @Builder
 public class PartnerApiResponse {
     private Long id;
-    private String address;
-    private String businessNumber;
-    private String callCenter;
-    private Long categoryId;
-    private String ceoName;
-    private LocalDateTime createdAt;
-    private String createdBy;
     private String name;
-    private String partnerNumber;
-    private LocalDateTime registeredAt;
     private String status;
+    private String address;
+    private String callCenter;
+    private String partnerNumber;
+    private String businessNumber;
+    private String ceoName;
+    private LocalDateTime registeredAt;
     private LocalDateTime unregisteredAt;
+    private Long categoryId;
 }

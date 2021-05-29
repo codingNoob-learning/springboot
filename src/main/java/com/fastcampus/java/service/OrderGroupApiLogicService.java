@@ -1,9 +1,12 @@
 package com.fastcampus.java.service;
 
 import com.fastcampus.java.ifs.CrudInterface;
+import com.fastcampus.java.model.entity.OrderDetail;
 import com.fastcampus.java.model.entity.OrderGroup;
 import com.fastcampus.java.model.network.Header;
+import com.fastcampus.java.model.network.request.OrderDetailApiRequest;
 import com.fastcampus.java.model.network.request.OrderGroupApiRequest;
+import com.fastcampus.java.model.network.response.OrderDetailApiResponse;
 import com.fastcampus.java.model.network.response.OrderGroupApiResponse;
 import com.fastcampus.java.repository.OrderGroupRepository;
 import com.fastcampus.java.repository.UserRepository;
@@ -13,9 +16,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiRequest, OrderGroupApiResponse> {
-    @Autowired
-    private OrderGroupRepository orderGroupRepository;
+public class OrderGroupApiLogicService extends BaseService<OrderGroupApiRequest, OrderGroupApiResponse, OrderGroup> {
+//    @Autowired
+//    private OrderGroupRepository orderGroupRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -36,14 +39,14 @@ public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiReq
                 .user(userRepository.getOne(body.getUserId()))
                 .build();
 
-        OrderGroup newOrderGroup = orderGroupRepository.save(orderGroup);
+        OrderGroup newOrderGroup = baseRepository.save(orderGroup);
 
         return response(newOrderGroup);
     }
 
     @Override
     public Header<OrderGroupApiResponse> read(Long id) {
-        return orderGroupRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(orderGroup -> response(orderGroup))
                 //.map(this::response)
                 //.map(orderGroup -> {
@@ -57,7 +60,7 @@ public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiReq
 
         OrderGroupApiRequest body = request.getData();
 
-        return orderGroupRepository.findById(body.getId())
+        return baseRepository.findById(body.getId())
                 .map(orderGroup -> {
                     orderGroup.setStatus(body.getStatus())
                             .setOrderType(body.getOrderType())
@@ -71,7 +74,7 @@ public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiReq
                     return orderGroup;
                 })
                 .map(changeOrderGroup -> {
-                    orderGroupRepository.save(changeOrderGroup);
+                    baseRepository.save(changeOrderGroup);
                     return changeOrderGroup;
                 })
                 .map(this::response)
@@ -80,9 +83,9 @@ public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiReq
 
     @Override
     public Header delete(Long id) {
-        return orderGroupRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(orderGroup -> {
-                    orderGroupRepository.delete(orderGroup);
+                    baseRepository.delete(orderGroup);
                     return Header.OK();
                 })
                 .orElseGet(() -> Header.ERROR("데이터 없음"));

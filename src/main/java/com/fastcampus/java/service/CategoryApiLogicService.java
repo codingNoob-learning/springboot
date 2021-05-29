@@ -2,17 +2,20 @@ package com.fastcampus.java.service;
 
 import com.fastcampus.java.ifs.CrudInterface;
 import com.fastcampus.java.model.entity.Category;
+import com.fastcampus.java.model.entity.Item;
 import com.fastcampus.java.model.network.Header;
 import com.fastcampus.java.model.network.request.CategoryApiRequest;
+import com.fastcampus.java.model.network.request.ItemApiRequest;
 import com.fastcampus.java.model.network.response.CategoryApiResponse;
+import com.fastcampus.java.model.network.response.ItemApiResponse;
 import com.fastcampus.java.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoryApiLogicService implements CrudInterface<CategoryApiRequest, CategoryApiResponse> {
-    @Autowired
-    CategoryRepository categoryRepository;
+public class CategoryApiLogicService extends BaseService<CategoryApiRequest, CategoryApiResponse, Category> {
+//    @Autowired
+//    CategoryRepository categoryRepository;
 
     @Override
     public Header<CategoryApiResponse> create(Header<CategoryApiRequest> request) {
@@ -25,14 +28,14 @@ public class CategoryApiLogicService implements CrudInterface<CategoryApiRequest
                 .type(body.getType())
                 .build();
 
-        Category newCategory = categoryRepository.save(category);
+        Category newCategory = baseRepository.save(category);
 
         return response(newCategory);
     }
 
     @Override
     public Header<CategoryApiResponse> read(Long id) {
-        return categoryRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(category -> response(category))
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
@@ -41,7 +44,7 @@ public class CategoryApiLogicService implements CrudInterface<CategoryApiRequest
     public Header<CategoryApiResponse> update(Header<CategoryApiRequest> request) {
         CategoryApiRequest body = request.getData();
 
-        return categoryRepository.findById(body.getId())
+        return baseRepository.findById(body.getId())
                 .map(entityCategory -> {
                     entityCategory.setCreatedAt(body.getCreatedAt())
                         .setCreatedBy(body.getCreatedBy())
@@ -50,7 +53,7 @@ public class CategoryApiLogicService implements CrudInterface<CategoryApiRequest
                         return entityCategory;
                     })
                 .map(newEntityCategory -> {
-                    categoryRepository.save(newEntityCategory);
+                    baseRepository.save(newEntityCategory);
                     return newEntityCategory;
                 })
                 .map(category -> response(category))
@@ -59,9 +62,9 @@ public class CategoryApiLogicService implements CrudInterface<CategoryApiRequest
 
     @Override
     public Header delete(Long id) {
-        return categoryRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(category -> {
-                    categoryRepository.delete(category);
+                    baseRepository.delete(category);
                     return Header.OK();
                 })
                 .orElseGet(() -> Header.ERROR("데이터 없음"));

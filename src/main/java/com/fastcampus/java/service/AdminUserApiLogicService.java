@@ -2,9 +2,12 @@ package com.fastcampus.java.service;
 
 import com.fastcampus.java.ifs.CrudInterface;
 import com.fastcampus.java.model.entity.AdminUser;
+import com.fastcampus.java.model.entity.Item;
 import com.fastcampus.java.model.network.Header;
 import com.fastcampus.java.model.network.request.AdminUserApiRequest;
+import com.fastcampus.java.model.network.request.ItemApiRequest;
 import com.fastcampus.java.model.network.response.AdminUserApiResponse;
+import com.fastcampus.java.model.network.response.ItemApiResponse;
 import com.fastcampus.java.repository.AdminUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,9 +15,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-public class AdminUserApiLogicService implements CrudInterface<AdminUserApiRequest, AdminUserApiResponse> {
-    @Autowired
-    AdminUserRepository adminUserRepository;
+public class AdminUserApiLogicService extends BaseService<AdminUserApiRequest, AdminUserApiResponse, AdminUser> {
+//    @Autowired
+//    AdminUserRepository adminUserRepository;
 
     @Override
     public Header<AdminUserApiResponse> create(Header<AdminUserApiRequest> request) {
@@ -32,13 +35,13 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserApiReque
                 .status(body.getStatus())
                 .build();
 
-        AdminUser newAdminUser = adminUserRepository.save(adminUser);
+        AdminUser newAdminUser = baseRepository.save(adminUser);
         return response(newAdminUser);
     }
 
     @Override
     public Header<AdminUserApiResponse> read(Long id) {
-        return adminUserRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(adminUser -> response(adminUser))
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
@@ -47,7 +50,7 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserApiReque
     public Header<AdminUserApiResponse> update(Header<AdminUserApiRequest> request) {
         AdminUserApiRequest body = request.getData();
 
-        return adminUserRepository.findById(body.getId())
+        return baseRepository.findById(body.getId())
                 .map((entityAdminUser -> {
                     entityAdminUser.setAccount(body.getAccount())
                             .setLoginFailCount(body.getLoginFailCount())
@@ -58,7 +61,7 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserApiReque
                     return entityAdminUser;
                 }))
                 .map(newEntityAdminUser -> {
-                    adminUserRepository.save(newEntityAdminUser);
+                    baseRepository.save(newEntityAdminUser);
                     return newEntityAdminUser;
                 })
                 .map(adminUser -> response(adminUser))
@@ -67,9 +70,9 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserApiReque
 
     @Override
     public Header delete(Long id) {
-        return adminUserRepository.findById(id)
+        return baseRepository.findById(id)
                 .map(adminUser -> {
-                    adminUserRepository.delete(adminUser);
+                    baseRepository.delete(adminUser);
                     return Header.OK();
                 })
                 .orElseGet(() -> Header.ERROR("데이터 없음"));

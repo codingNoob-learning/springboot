@@ -30,7 +30,6 @@ public class Header<T> {
                 .resultCode("OK")
                 .description("OK")
                 .build();
-
     }
 
     // DATA OK

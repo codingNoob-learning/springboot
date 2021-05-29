@@ -2,6 +2,7 @@ package com.fastcampus.java.service;
 
 import com.fastcampus.java.ifs.CrudInterface;
 import com.fastcampus.java.model.entity.User;
+import com.fastcampus.java.model.enumclass.UserStatus;
 import com.fastcampus.java.model.network.Header;
 import com.fastcampus.java.model.network.request.UserApiRequest;
 import com.fastcampus.java.model.network.response.UserApiResponse;
@@ -28,7 +29,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
         User user = User.builder()
                 .account(userApiRequest.getAccount())
                 .password(userApiRequest.getPassword())
-                .status("REGISTERED")
+                .status(UserStatus.REGISTERED)
                 .phoneNumber(userApiRequest.getPhoneNumber())
                 .email(userApiRequest.getEmail())
                 .registeredAt(LocalDateTime.now())
