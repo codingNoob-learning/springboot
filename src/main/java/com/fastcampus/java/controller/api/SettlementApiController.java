@@ -27,8 +27,9 @@ public class SettlementApiController extends CrudController<SettlementApiRequest
     @Autowired
     SettlementApiLogicService settlementApiLogicService;
 
-    @GetMapping("/{id}/settlementInfo")
-    public Header<SettlementApiResponse> settlementInfo(@PathVariable Long id) {
-        return settlementApiLogicService.settlementInfo(id);
+    @Override
+    @GetMapping("/{id}")
+    public Header<SettlementApiResponse> read(@PathVariable Long id) {
+        return settlementApiLogicService.read(id);
     }
 }

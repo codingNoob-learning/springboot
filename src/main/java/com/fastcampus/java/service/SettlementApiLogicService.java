@@ -29,10 +29,9 @@ public class SettlementApiLogicService extends BaseService<SettlementApiRequest,
 
     @Override
     public Header<SettlementApiResponse> read(Long id) {
-        return null;
-//            baseRepository.findById(id)
-//                .map(settlement -> response(settlement))
-//                .orElseGet(() -> Header.ERROR("데이터 없음"));
+        return baseRepository.findById(id)
+                .map(settlement -> response(settlement))
+                .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     @Override
@@ -51,12 +50,6 @@ public class SettlementApiLogicService extends BaseService<SettlementApiRequest,
                 .price(settlement.getPrice())
                 .build();
         return Header.OK(body);
-    }
-
-    public Header<SettlementApiResponse> settlementInfo(Long id) {
-        return settlementRepository.findById(id)
-                .map(settlement -> response(settlement))
-                .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     public Header<SettlementApiResponse> settlementCreate(Header<OrderGroupApiRequest> request) {
