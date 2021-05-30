@@ -3,11 +3,14 @@ package com.fastcampus.java.service;
 import com.fastcampus.java.ifs.CrudInterface;
 import com.fastcampus.java.model.entity.OrderDetail;
 import com.fastcampus.java.model.entity.OrderGroup;
+import com.fastcampus.java.model.entity.Settlement;
 import com.fastcampus.java.model.network.Header;
 import com.fastcampus.java.model.network.request.OrderDetailApiRequest;
 import com.fastcampus.java.model.network.request.OrderGroupApiRequest;
+import com.fastcampus.java.model.network.request.SettlementApiRequest;
 import com.fastcampus.java.model.network.response.OrderDetailApiResponse;
 import com.fastcampus.java.model.network.response.OrderGroupApiResponse;
+import com.fastcampus.java.model.network.response.SettlementApiResponse;
 import com.fastcampus.java.repository.OrderGroupRepository;
 import com.fastcampus.java.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,9 @@ public class OrderGroupApiLogicService extends BaseService<OrderGroupApiRequest,
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    SettlementApiLogicService settlementApiLogicService;
 
     @Override
     public Header<OrderGroupApiResponse> create(Header<OrderGroupApiRequest> request) {
@@ -38,6 +44,10 @@ public class OrderGroupApiLogicService extends BaseService<OrderGroupApiRequest,
                 .orderAt(LocalDateTime.now())
                 .user(userRepository.getOne(body.getUserId()))
                 .build();
+
+        // Settlement 테이블의 row는 따로 데이터를 put 해주는 방식이 아닌
+        // OrderGroup 이 create가 될 때마다 실행이 되면서 total_price를 합산해줘야 함
+        settlementApiLogicService.settlementCreate(request);
 
         OrderGroup newOrderGroup = baseRepository.save(orderGroup);
 

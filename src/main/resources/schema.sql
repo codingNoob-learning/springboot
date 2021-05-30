@@ -140,6 +140,13 @@ CREATE TABLE IF NOT EXISTS `study`.`order_detail` (
     DEFAULT CHARACTER SET = utf8mb4
     COLLATE = utf8mb4_bin;
 
+CREATE TABLE IF NOT EXISTS `study`.`settlement` (
+    `user_id` BIGINT(20) NOT NULL,
+    `price` DECIMAL(12,4),
+    PRIMARY KEY (`user_id`))
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8mb4
+    COLLATE = utf8mb4_bin;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

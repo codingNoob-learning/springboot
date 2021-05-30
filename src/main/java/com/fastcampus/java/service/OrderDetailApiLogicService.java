@@ -4,6 +4,7 @@ import com.fastcampus.java.ifs.CrudInterface;
 import com.fastcampus.java.model.entity.Category;
 import com.fastcampus.java.model.entity.OrderDetail;
 import com.fastcampus.java.model.entity.OrderGroup;
+import com.fastcampus.java.model.entity.Settlement;
 import com.fastcampus.java.model.network.Header;
 import com.fastcampus.java.model.network.request.CategoryApiRequest;
 import com.fastcampus.java.model.network.request.OrderDetailApiRequest;
